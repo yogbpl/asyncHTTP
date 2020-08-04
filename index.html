@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Unblock UI</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="http://invest.mpidc.co.in/LBA/resources/js/jquery.blockUI.js"></script>
+    <script>
+        function blockMyScreen() {
+            $.blockUI({
+                message: '<h1>Please wait...</h1>',
+                css: {
+                    backgroundColor: 'transparent',
+                    borderWidth: '0px',
+                    color: '#3b5998'
+                },
+                overlayCSS: {
+                    backgroundColor: '#000000',
+                    opacity: .2
+                }
+            });
+        }
+
+        function unblockScreen() {
+            $.unblockUI();
+        }
+        $(document).ready(function () {
+            $(document).bind("ajaxSend", function () {
+                blockMyScreen();
+            }).bind("ajaxComplete", function () {
+                unblockScreen();
+            });
+        })
+    </script>
+    <script>
+        class Posts {
+            constructor() {
+                this.fetchData()
+            }
+
+            sendHttpRequest(url) {
+                const promise = new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: url,
+                        success: function (json) {
+                            resolve(json)
+                        },
+                        error: function () {
+                            console.log('Failed to fetch records.');
+                        }
+                    });
+
+                })
+                return promise
+            }
+            async fetchData() {
+                const responseData = await this.sendHttpRequest("https://jsonplaceholder.typicode.com/posts");
+                console.log(responseData)
+            }
+
+        }
+        new Posts();
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
